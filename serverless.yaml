@@ -1,0 +1,92 @@
+service: expense-manager-api
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+  timeout: 3
+  environment:
+    EXPENSE_TABLE: expense-table-${self:provider.stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow  
+          Action:       
+            - dynamodb:Query
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:GetItem
+            - dynamodb:DeleteItem
+          Resource: 
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EXPENSE_TABLE}
+
+functions:
+  getExpenses:
+    handler: src/handlers/getExpenses.handler
+    name: expense-manager-api-get-expenses
+    description: Get all expenses from db
+    events:
+      - http:
+          path: /expenses
+          method: get
+          cors: true
+
+  getExpenseById:
+    handler: src/handlers/getExpenseById.handler
+    name: expense-manager-api-get-expense-by-id
+    description: Get an expense in db by id
+    events:
+      - http:
+          path: /expenses/{id}
+          method: get
+          cors: true
+
+  createExpense:
+    handler: src/handlers/createExpense.handler
+    name: expense-manager-api-create-expense
+    description: Create a new expense in db
+    events:
+      - http:
+          path: /expenses
+          method: post
+          cors: true
+
+  updateExpenseById:
+    handler: src/handlers/updateExpenseById.handler
+    name: expense-manager-api-update-expense-by-id
+    description: Update an expense in db by id
+    events:
+      - http:
+          path: /expenses/{id}
+          method: put
+          cors: true
+
+  deleteExpenseById:
+    handler: src/handlers/deleteExpenseById.handler
+    name: expense-manager-api-delete-expense-by-id
+    description: Delete an expense in db by id
+    events:
+      - http:
+          path: /expenses/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    ExpenseTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.EXPENSE_TABLE}
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
