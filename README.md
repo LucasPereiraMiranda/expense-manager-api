@@ -46,8 +46,6 @@ This project is a serverless application with five lambda functions, designed to
 
 The developed functions are the following:
 
-![Functions Preview](.github/img/functions-preview.png)
-
 - **getExpenses lambda function**:
   - Exposes an HTTP GET endpoint at /expenses via API Gateway.
   - Retrieves all expense records from the DynamoDB table.
@@ -74,7 +72,7 @@ The developed functions are the following:
   - Validates incoming payloads to ensure data integrity.
   - Deletes the specified expense record from the DynamoDB table based on the provided id.
 
-
+We can see the following preview on aws console lambdas after deploy:
 
 ![Functions Preview](.github/img/functions-preview.png)
 
