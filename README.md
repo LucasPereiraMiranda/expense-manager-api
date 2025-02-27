@@ -55,7 +55,6 @@ The developed functions are the following:
   - Exposes an HTTP GET endpoint at /expenses/{id} via API Gateway.
   - Validates incoming payloads to ensure data integrity.
   - Retrieves a specific expense record from the DynamoDB table based on the provided id.
-  - Handles potential failures and utilizes Dead Letter Queues (DLQs) to prevent message loss.
 
 - **createExpense lambda function**:
   - Exposes an HTTP POST endpoint at /expenses via API Gateway.
